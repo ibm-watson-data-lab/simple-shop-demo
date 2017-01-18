@@ -1,19 +1,31 @@
 <html>
 	<head>
 		<title>Simple Shop</title>
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/jquery-ui.min.css" rel="stylesheet">
+		<link href="css/shop.css" rel="stylesheet">
 		<script src="https://unpkg.com/vue/dist/vue.js"></script>
 		<script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+		<script src="js/jquery-ui.min.js"></script>
+		<script src="https://simple-notification.mybluemix.net/sns-client.js"></script>
+		<script src="js/sample-data.js"></script>
 	</head>
 	<body>
 
-		<div id="shop">
+		<div id="shop" class="container-fluid">
 			
-			<form id="freetext" v-on:submit.prevent="search">
-				<input type="text" name="q" v-model="q" id="q" placeholder="e.g. Misery">
+			<header>
+				<h1>My Poster Shop</h1>
+				<hr>
+			</header>
+
+			<form id="freetext" v-on:submit.prevent="search" class="hidden">
+				<input type="text" name="title" v-model="title" id="title" placeholder="e.g. Misery or Brad Pitt">
 				<button type="submit">Search</button>
 			</form>
 
-			<form id="advanced" v-on:submit.prevent="advancedSearch">
+			<form id="advanced" v-on:submit.prevent="advancedSearch" class="hidden">
 				<input type="text" name="cast" v-model="cast" id="cast" placeholder="e.g. brad pitt">
 				<input type="text" name="year" v-model="year" id="year" placeholder="e.g. 2005">
 				<input type="text" name="genre" v-model="genre" id="genre" placeholder="e.g. Drama">
@@ -21,42 +33,136 @@
 				<button type="submit">Search</button>
 			</form>
 
-			<div v-for="movie in movies">
-				<h1>{{ movie.title }}</h1>
-				<ul v-for="actor in movie.cast">
-					<li>{{ actor }}</li>
-				</ul>
-				<p>{{ movie.genre.join(" / ") }}</p>
-				<p>{{ movie.director }}</p>
-				<p>{{ movie.year }}</p>
-				<p>&pound;{{ movie.price }}</p>
-				<img v-bind:src="movie.poster">
+			<div class="row">
+			
+				<div class="col-md-3" v-for="movie in movies">
+					<h3 class="text-nowrap">{{ movie.title }}</h3>
+					<img v-on:click="moreDetails(movie)" v-bind:src="movie.poster || 'http://ia.media-imdb.com/images/M/MV5BMTQwNTU3MTE4NF5BMl5BanBnXkFtZTcwOTgxNDM2Mg@@._V1_SX300.jpg'" class="poster img-responsive">
+				</div>
+
 			</div>
 
+			<pre class="hidden" v-for="log in logs">{{ JSON.stringify(log) }}</pre>
+
+			<div id="moreDetails" class="modal fade" tabindex="-1" role="dialog">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title">{{ popup.title || '' }} ({{ popup.year || '' }})</h4>
+			      </div>
+			      <div class="modal-body">
+			        <h4>&pound;{{ popup.price || 0 }}</h4>
+			        <p><b>Cast:</b> {{ popup.cast && popup.cast.join(", ") }}</p>
+			        <p><b>Director:</b> {{ popup.director || '' }}</p>
+			        <p>{{ popup.genre && popup.genre.join(" / ") }}</p>
+			        <img :src="popup.poster">
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<footer class="footer">
+			  <div class="container">
+			  	
+			  	<h1>{{ cards[currentCard].title }}</h1>
+			    <p>{{ cards[currentCard].description }}</p>
+			    <p><a target="_blank" :href="cards[currentCard].cta.url">{{ cards[currentCard].cta.label}}</a></p>
+			    
+			    <button v-if="currentCard < (cards.length - 1)" class="btn btn-info" v-on:click="nextCard">Next</button>
+
+			  </div>
+			</footer>
+
 		</div>
+
+			
 
 	</body>
 	<script type="text/javascript">
 		
+		var sns = new SNSClient("shop", {
+			userData: {
+				type: "shop"
+			},
+			userQuery: {
+				type: "shop"
+			}
+		})
+
+		sns.on('notification', function(n) {
+
+			app.log(n);
+
+		})
+
 		var app = new Vue({
 		  el: '#shop',
 		  data: {
-		    movies: [],
-		    q: "",
+		    movies: sampleData,
+		    title: "",
 		    cast: "",
 		    year: "",
 		    director: "",
-		    genre: ""
+		    genre: "",
+		    autocompletes: ["cast", "director", "year", "genre", "title"],
+		    logs:[],
+		    popup: {},
+		    cards: cardData,
+		    currentCard: 0
+		  },
+		  created: function() {
+
+		  	$(document).ready(function() {
+
+		  		this.autocompletes.forEach(function(a) {
+		  			
+		  			$("#"+a).autocomplete({
+						  
+						  source: "https://autocomplete-discovery.mybluemix.net/api/movie_" + encodeURIComponent(a),
+						  
+						  select: function( event, ui ) {
+						  	this[a] = ui.item.value;
+						  	this.log({
+						  		action: "autocomplete selected",
+						  		index: a,
+						  		value: ui.item.value
+						  	})
+						  }.bind(this),
+						  
+						  search: function(event, ui) {
+						  	this.log({
+						  		action: "autocomplete",
+						  		index: a,
+						  		term: this[a]
+						  	})
+						  }.bind(this)
+
+						})
+
+		  		}.bind(this))
+
+		  	}.bind(this))
+
+		  	this.log({
+		  		action: "page load"
+		  	})
+
 		  },
 		  methods: {
 		  	
 		  	search: function() {
 		  		
-		  		if (!this.q) return;
+		  		if (!this.title) return;
 
-		  		this.$http.get('https://search-discovery.mybluemix.net/search?q=' + encodeURIComponent(this.q))
+		  		this.$http.get('https://search-discovery.mybluemix.net/search?q=' + encodeURIComponent(this.title))
 		  		.then(function(response) {
 		  			this.movies = response.data.rows;
+		  			this.log({
+				  		action: "search",
+				  		query: this.title,
+				  		number_of_results: response.data.rows.length
+				  	})
 		  		})
 
 		  	},
@@ -79,11 +185,39 @@
 		  		this.$http.get('https://search-discovery.mybluemix.net/search?q=' + encodeURIComponent(q.join(" AND ")))
 		  		.then(function(response) {
 		  			this.movies = response.data.rows;
+		  			this.log({
+				  		action: "advanced search",
+				  		query: q.join(" AND "),
+				  		number_of_results: response.data.rows.length
+				  	})
 		  		})
 
+		  	},
+
+		  	log: function(log) {
+
+		  		if (typeof log !== "object") return;
+
+		  		log.timestamp = new Date().getTime()
+		  		this.logs.unshift(log);
+
+		  	},
+
+		  	moreDetails: function(movie) {
+		  		this.popup = movie;
+		  		$('#moreDetails').modal('show');
+		  		this.log({
+		  			action: "popup",
+		  			poster: movie.title
+		  		})
+		  	},
+
+		  	nextCard: function() {
+		  		this.currentCard++;
 		  	}
 		  }
 		});
 
 	</script>
+	<script src="js/bootstrap.min.js"></script>
 </html>
