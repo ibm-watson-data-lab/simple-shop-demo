@@ -65,8 +65,11 @@
 			<footer class="footer">
 			  <div class="container">
 			  	
-			  	<h1>{{ cards[currentCard].title }}</h1>
-			    <p>{{ cards[currentCard].description }}</p>
+			    <h1>{{ cards[currentCard].title }}</h1>
+			    <p>{{ cards[currentCard].description1 }}</p>
+		            <p>{{ cards[currentCard].description2 }}</p>
+		            <p>{{ cards[currentCard].description3 }}</p>
+		            <h3>{{ cards[currentCard].description4 }}</h3>
 			    <p><a target="_blank" :href="cards[currentCard].cta.url">{{ cards[currentCard].cta.label}}</a></p>
 			    
 			    <button v-if="currentCard < (cards.length - 1)" class="btn btn-info" v-on:click="nextCard">Next</button>
