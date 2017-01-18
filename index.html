@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<title>Simple Shop</title>
+		<script src="https://unpkg.com/vue/dist/vue.js"></script>
+		<script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
+	</head>
+	<body>
+
+		<div id="shop">
+			
+			<form id="freetext" v-on:submit.prevent="search">
+				<input type="text" name="q" v-model="q" id="q" placeholder="e.g. Misery">
+				<button type="submit">Search</button>
+			</form>
+
+			<form id="advanced" v-on:submit.prevent="advancedSearch">
+				<input type="text" name="cast" v-model="cast" id="cast" placeholder="e.g. brad pitt">
+				<input type="text" name="year" v-model="year" id="year" placeholder="e.g. 2005">
+				<input type="text" name="genre" v-model="genre" id="genre" placeholder="e.g. Drama">
+				<input type="text" name="director" v-model="director" id="director" placeholder="e.g. Quentin Tarantino">
+				<button type="submit">Search</button>
+			</form>
+
+			<div v-for="movie in movies">
+				<h1>{{ movie.title }}</h1>
+				<ul v-for="actor in movie.cast">
+					<li>{{ actor }}</li>
+				</ul>
+				<p>{{ movie.genre.join(" / ") }}</p>
+				<p>{{ movie.director }}</p>
+				<p>{{ movie.year }}</p>
+				<p>&pound;{{ movie.price }}</p>
+				<img v-bind:src="movie.poster">
+			</div>
+
+		</div>
+
+	</body>
+	<script type="text/javascript">
+		
+		var app = new Vue({
+		  el: '#shop',
+		  data: {
+		    movies: [],
+		    q: "",
+		    cast: "",
+		    year: "",
+		    director: "",
+		    genre: ""
+		  },
+		  methods: {
+		  	
+		  	search: function() {
+		  		
+		  		if (!this.q) return;
+
+		  		this.$http.get('https://search-discovery.mybluemix.net/search?q=' + encodeURIComponent(this.q))
+		  		.then(function(response) {
+		  			this.movies = response.data.rows;
+		  		})
+
+		  	},
+
+		  	advancedSearch: function() {
+
+		  		var q = [];
+		  		var fields = ["cast", "year", "director", "genre"];
+
+		  		fields.forEach(function(f) {
+		  			
+		  			if (this[f]) {
+			  			q.push(f + ':"' + this[f] + '"')
+			  		}
+
+		  		}.bind(this))
+
+		  		if (q.length === 0) return;
+
+		  		this.$http.get('https://search-discovery.mybluemix.net/search?q=' + encodeURIComponent(q.join(" AND ")))
+		  		.then(function(response) {
+		  			this.movies = response.data.rows;
+		  		})
+
+		  	}
+		  }
+		});
+
+	</script>
+</html>
