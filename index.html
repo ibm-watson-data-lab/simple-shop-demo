@@ -20,18 +20,22 @@
 				<hr>
 			</header>
 
-			<form id="freetext" v-on:submit.prevent="search" class="hidden">
+			<form id="freetext" v-on:submit.prevent="search" v-show="cards[currentCard].searchVisible">
 				<input type="text" name="title" v-model="title" id="title" placeholder="e.g. Misery or Brad Pitt">
 				<button type="submit">Search</button>
 			</form>
 
-			<form id="advanced" v-on:submit.prevent="advancedSearch" class="hidden">
+			<form id="advanced" v-on:submit.prevent="advancedSearch" v-show="cards[currentCard].advancedSearchVisible">
 				<input type="text" name="cast" v-model="cast" id="cast" placeholder="e.g. brad pitt">
 				<input type="text" name="year" v-model="year" id="year" placeholder="e.g. 2005">
 				<input type="text" name="genre" v-model="genre" id="genre" placeholder="e.g. Drama">
 				<input type="text" name="director" v-model="director" id="director" placeholder="e.g. Quentin Tarantino">
 				<button type="submit">Search</button>
 			</form>
+
+      <div id="facets" v-show="cards[currentCard].facetsVisible">
+        FACETS GO HERE!
+			</div>
 
 			<div class="row">
 			
@@ -42,7 +46,7 @@
 
 			</div>
 
-			<pre class="hidden" v-for="log in logs">{{ JSON.stringify(log) }}</pre>
+			<pre v-show="cards[currentCard].logsVisible" v-for="log in logs">{{ JSON.stringify(log) }}</pre>
 
 			<div id="moreDetails" class="modal fade" tabindex="-1" role="dialog">
 			  <div class="modal-dialog" role="document">
