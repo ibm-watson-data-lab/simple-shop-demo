@@ -11,6 +11,10 @@
   cursor: pointer;
 }
 
+.mr10 {
+  margin-right: 10px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

@@ -14,7 +14,7 @@ movies.forEach((m, i) => {
 
 	doc.price = Math.floor(Math.random() * 10) + 5.99;
 
-	if (!doc.title || doc.title.match(/[^a-z0-9 ,\-\.!'']/i) || doc.cast.match(/[^a-z0-9 ,\-\.!'']/i) || doc.director.match(/[^a-z0-9 ,\-\.!'']/i)) {
+	if (!doc.poster || !doc.title || doc.title.match(/[^a-z0-9 ,\-\.!'']/i) || doc.cast.match(/[^a-z0-9 ,\-\.!'']/i) || doc.director.match(/[^a-z0-9 ,\-\.!'']/i)) {
 		movies[i] = null;
 	}
 

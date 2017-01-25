@@ -15,57 +15,101 @@
 
 		<div id="shop" class="container-fluid">
 			
-			<header>
-				<h1>My Poster Shop</h1>
-				<hr>
-			</header>
+			<div id="frontofsite" v-show="!cards[currentCard].backOfSite">
+				<header>
+					<h1>My Poster Shop</h1>
+					<hr>
+				</header>
 
-			<form id="freetext" v-on:submit.prevent="search" v-show="cards[currentCard].searchVisible">
-				<input type="text" name="title" v-model="title" id="title" placeholder="e.g. Misery or Brad Pitt">
-				<button type="submit">Search</button>
-			</form>
+				<div class="row">
+				
+					<div class="col-md-6">
+						<form id="freetext" v-on:submit.prevent="search" v-show="cards[currentCard].searchVisible">
+							<input type="text" name="title" v-model="title" id="title" placeholder="e.g. Misery or Brad Pitt" data-autocomplete>
+							<button type="submit">Search</button>
+						</form>
 
-			<form id="advanced" v-on:submit.prevent="advancedSearch" v-show="cards[currentCard].advancedSearchVisible">
-				<input type="text" name="cast" v-model="cast" id="cast" placeholder="e.g. brad pitt">
-				<input type="text" name="year" v-model="year" id="year" placeholder="e.g. 2005">
-				<input type="text" name="genre" v-model="genre" id="genre" placeholder="e.g. Drama">
-				<input type="text" name="director" v-model="director" id="director" placeholder="e.g. Quentin Tarantino">
-				<button type="submit">Search</button>
-			</form>
+						<form id="advanced" v-on:submit.prevent="advancedSearch" v-show="cards[currentCard].advancedSearchVisible">
+							<input type="text" name="cast" v-model="cast" id="cast" placeholder="e.g. brad pitt" data-autocomplete>
+							<input type="text" name="year" v-model="year" id="year" placeholder="e.g. 2005" data-autocomplete>
+							<input type="text" name="genre" v-model="genre" id="genre" placeholder="e.g. Drama" data-autocomplete>
+							<input type="text" name="director" v-model="director" id="director" placeholder="e.g. Quentin Tarantino" data-autocomplete>
+							<button type="submit">Search</button>
+						</form>
+					</div>
 
-      <div id="facets" v-show="cards[currentCard].facetsVisible">
-        FACETS GO HERE!
+					<div class="col-md-6">
+					<div class="alert alert-warning alert-dismissible" role="alert" v-show="notificationData">
+					  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					  <strong>Watch out!</strong> {{ notificationData }}
+					</div>
+					</div>
+
+				</div>
+						
+
+	      <div id="facets" v-show="cards[currentCard].facetsVisible">
+	        
+	        <h4 v-show="facets.genre">Genre</h4>
+	      	<button v-on:click="setFacet('genre', genre)" v-for="count,genre in facets.genre" class="btn btn-info mr10" type="button">
+					  {{ genre }} <span class="badge">{{ count }}</span>
+					</button>
+
+	      	<h4 v-show="facets.year">Year</h4>
+	      	<button v-on:click="setFacet('year', year)" v-for="count,year in facets.year" class="btn btn-info mr10" type="button">
+					  {{ year }} <span class="badge">{{ count }}</span>
+					</button>
+
+				</div>
+
+				<div class="row">
+				
+					<div class="col-md-3" v-for="movie in movies">
+						<h3 class="text-nowrap">{{ movie.title }}</h3>
+						<img v-on:click="moreDetails(movie)" v-bind:src="movie.poster" class="poster img-responsive">
+					</div>
+
+				</div>
+
+				<pre v-show="cards[currentCard].logsVisible" v-for="log in logs">{{ JSON.stringify(log) }}</pre>
+
+				<div id="moreDetails" class="modal fade" tabindex="-1" role="dialog">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title">{{ popup.title || '' }} ({{ popup.year || '' }})</h4>
+				      </div>
+				      <div class="modal-body">
+				        <h4>&pound;{{ popup.price || 0 }}</h4>
+				        <p><b>Cast:</b> {{ popup.cast && popup.cast.join(", ") }}</p>
+				        <p><b>Director:</b> {{ popup.director || '' }}</p>
+				        <p>{{ popup.genre && popup.genre.join(" / ") }}</p>
+				        <img :src="popup.poster">
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			
 			</div>
 
-			<div class="row">
-			
-				<div class="col-md-3" v-for="movie in movies">
-					<h3 class="text-nowrap">{{ movie.title }}</h3>
-					<img v-on:click="moreDetails(movie)" v-bind:src="movie.poster || 'http://ia.media-imdb.com/images/M/MV5BMTQwNTU3MTE4NF5BMl5BanBnXkFtZTcwOTgxNDM2Mg@@._V1_SX300.jpg'" class="poster img-responsive">
+			<div id="backofsite" class="container-fluid" v-show="cards[currentCard].backOfSite">
+
+				<header>
+					<h1>How does this all work?</h1>
+					<hr>
+				</header>
+
+				<div class="row">
+
+					<div class="col-md-12">
+						<img src="img/schematic.png">
+					</div>
+
 				</div>
 
 			</div>
 
-			<pre v-show="cards[currentCard].logsVisible" v-for="log in logs">{{ JSON.stringify(log) }}</pre>
-
-			<div id="moreDetails" class="modal fade" tabindex="-1" role="dialog">
-			  <div class="modal-dialog" role="document">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        <h4 class="modal-title">{{ popup.title || '' }} ({{ popup.year || '' }})</h4>
-			      </div>
-			      <div class="modal-body">
-			        <h4>&pound;{{ popup.price || 0 }}</h4>
-			        <p><b>Cast:</b> {{ popup.cast && popup.cast.join(", ") }}</p>
-			        <p><b>Director:</b> {{ popup.director || '' }}</p>
-			        <p>{{ popup.genre && popup.genre.join(" / ") }}</p>
-			        <img :src="popup.poster">
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			
 			<footer class="footer">
 			  <div class="container">
 			  	
@@ -73,15 +117,13 @@
 			    <p>{{ cards[currentCard].description1 }}</p>
 		      <p>{{ cards[currentCard].description2 }}</p>
 		      <p>{{ cards[currentCard].description3 }}</p>
-		      <h3>{{ cards[currentCard].description4 }} <button v-if="currentCard < (cards.length - 1)" class="btn btn-info" v-on:click="nextCard">Next</button></h3>
-			    <p><a target="_blank" :href="cards[currentCard].cta.url">{{ cards[currentCard].cta.label}}</a></p>
+		      <h3>{{ cards[currentCard].description4 }} <button v-if="currentCard < (cards.length - 1)" class="btn btn-info" v-on:click="nextCard">Next</button><button v-if="currentCard == (cards.length - 1)" class="btn btn-info" v-on:click="reset">Restart The Demo</button></h3>
+			    <p v-show="cards[currentCard].cta.url"><a target="_blank" :href="cards[currentCard].cta.url">{{ cards[currentCard].cta.label}}</a></p>
 			   
 			  </div>
 			</footer>
 
 		</div>
-
-			
 
 	</body>
 	<script type="text/javascript">
@@ -95,16 +137,15 @@
 			}
 		})
 
-		sns.on('notification', function(n) {
-
-			app.log(n);
-
-		})
+		sns.on('notification', function() {
+			app.renderNotification()
+		});
 
 		var app = new Vue({
 		  el: '#shop',
 		  data: {
 		    movies: sampleData,
+		    facets: {},
 		    title: "",
 		    cast: "",
 		    year: "",
@@ -114,7 +155,33 @@
 		    logs:[],
 		    popup: {},
 		    cards: cardData,
-		    currentCard: 0
+		    currentCard: 0,
+		    realtimeMovies: [],
+		    notificationData: null
+		  },
+		  watch: {
+		  	currentCard: function(val, oldVal) {
+		  		
+		  		var disabled = !this.cards[val].autoCompleteOn;
+		  		var oldDisabled = !this.cards[oldVal].autoCompleteOn;
+		  		var inputs = $("input[data-autocomplete]");
+		  		inputs.autocomplete( "option", "disabled", disabled );
+		  		
+
+
+		  		if (disabled === false && disabled !== oldDisabled) {
+			  		inputs.animate({
+	            backgroundColor: "#f00"
+				    }, 1000, function() {
+				    	
+				    	inputs.animate({
+		            backgroundColor: "#fff"
+					    }, 1000)
+
+				    } );
+			  	}
+
+		  	}
 		  },
 		  created: function() {
 
@@ -141,7 +208,9 @@
 						  		index: a,
 						  		term: this[a]
 						  	})
-						  }.bind(this)
+						  }.bind(this),
+
+						  disabled: true
 
 						})
 
@@ -163,6 +232,12 @@
 		  		this.$http.get('https://search-discovery.mybluemix.net/search?q=' + encodeURIComponent(this.title))
 		  		.then(function(response) {
 		  			this.movies = response.data.rows;
+		  			this.facets = response.data.counts;
+
+		  			if (this.realtimeMovies.length == 0) {
+		  				this.realtimeMovies = response.data.rows;
+		  			}
+		  			
 		  			this.log({
 				  		action: "search",
 				  		query: this.title,
@@ -177,6 +252,10 @@
 		  		var q = [];
 		  		var fields = ["cast", "year", "director", "genre"];
 
+		  		if (this.title) {
+		  			q.push(this.title);
+		  		}
+
 		  		fields.forEach(function(f) {
 		  			
 		  			if (this[f]) {
@@ -190,6 +269,7 @@
 		  		this.$http.get('https://search-discovery.mybluemix.net/search?q=' + encodeURIComponent(q.join(" AND ")))
 		  		.then(function(response) {
 		  			this.movies = response.data.rows;
+		  			this.facets = response.data.counts;
 		  			this.log({
 				  		action: "advanced search",
 				  		query: q.join(" AND "),
@@ -219,6 +299,47 @@
 
 		  	nextCard: function() {
 		  		this.currentCard++;
+		  	},
+
+		  	setFacet: function(facetName, value) {
+
+		  		this[facetName] = value;
+		  		this.advancedSearch();
+
+		  	},
+
+		  	renderNotification: function(n) {
+
+		  		if (this.cards[this.currentCard].notificationsOn === false) return;
+
+		  		if (this.realtimeMovies.length == 0) return;
+
+		  		var movie = this.realtimeMovies.shift();
+		  		this.realtimeMovies.push(movie);
+
+		  		this.notificationData = movie.title + " is running low on stock";
+		  		this.log({ action: "notification", type: "low stock", movie: movie.title })
+
+		  		setTimeout(function() {
+		  			this.notificationData = null;
+		  		}.bind(this), 5000)
+
+		  	},
+
+		  	reset: function() {
+
+		  		this.movies = sampleData;
+		  		this.facets = {};
+		  		this.title = "";
+		  		this.cast = "";
+		  		this.year = "";
+		  		this.director = "";
+		  		this.genre = "";
+		  		this.logs = [];
+		  		this.currentCard = 0;
+		  		this.realtimeMovies = [];
+		  		this.notificationData = null;
+
 		  	}
 		  }
 		});

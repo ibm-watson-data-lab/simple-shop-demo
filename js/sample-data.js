@@ -24,25 +24,25 @@ var sampleData = [
   },
 
   {
-    "_id": "87469",
-    "_rev": "1-21ec837f1ff85d1d688e44c0419e3141",
-    "title": "Indiana Jones and the Temple of Doom",
-    "year": "1984",
-    "rating": 7.6,
-    "runtime": "118 min",
+    "_id": "68646",
+    "_rev": "1-7b8a0bde69c9c1d7d7128a40c7c43471",
+    "title": "The Godfather",
+    "year": "1972",
+    "rating": 9.2,
+    "runtime": "175 min",
     "genre": [
-      "Action",
-      "Adventure"
+      "Crime",
+      "Drama"
     ],
-    "director": "Steven Spielberg",
+    "director": "Francis Ford Coppola",
     "cast": [
-      "Harrison Ford",
-      "Kate Capshaw",
-      "Jonathan Ke Quan",
-      "Amrish Puri"
+      "Marlon Brando",
+      "Al Pacino",
+      "James Caan",
+      "Richard S. Castellano"
     ],
-    "poster": "http://ia.media-imdb.com/images/M/MV5BMTMyNzI4OTA5OV5BMl5BanBnXkFtZTcwMDQ2MjAxNA@@._V1_SX300.jpg",
-    "price": 5.99
+    "poster": "http://ia.media-imdb.com/images/M/MV5BMjEyMjcyNDI4MF5BMl5BanBnXkFtZTcwMDA5Mzg3OA@@._V1_SX300.jpg",
+    "price": 6.99
   },
 
   {
@@ -106,15 +106,16 @@ var cardData = [
     logsVisible: false,
     autoCompleteOn: false,
     notificationsOn: false,
+    backOfSite: false,
     cta: {
-      url: "http://www.google.com",
-      label: "Google"
+      url: null,
+      label: null
     }
   },
 
   {
     title: "Step 2 - Now with added search",
-    description1: "Try performing a search by typing an film's name (e.g. Unforgiven) and clicking the search button. You can also search by actor, director or year in this box.",
+    description1: "Try performing a search by typing a directors name into the search box (e.g. 'Spielberg') and clicking the search button. You can also search by actor, or film title in this box.",
     description2: "To achieve this we simply uploaded our product inventory file to the Simple Search Service which stored the data in a Cloudant database and indexed the fields for search.",
     description3: "But there's more data in the search results than you can see here.",
     description4: "Click NEXT to add facets to our search results",
@@ -124,17 +125,18 @@ var cardData = [
     logsVisible: false,
     autoCompleteOn: false,
     notificationsOn: false,
+    backOfSite: false,
     cta: {
-      url: "http://www.microsoft.com",
-      label: "Microsoft"
+      url: "https://github.com/ibm-cds-labs/simple-search-service",
+      label: "Simple Search Service"
     }
   },
 
   {
     title: "Step 3 - Search results with facets",
-    description1: "Facets are counts of repeating values in your data set. Search for 'Brad Pitt' and see the counts of posters by year and genre",
+    description1: "Facets are counts of repeating values in your data set. Search for 'Spielberg' and see the counts of posters by year and genre",
     description2: "The facets can also be used to allow users to filter the data set. Click on one of the facets to see the data set become more focussed.",
-    description3: "What if we wanted to users to search by individual field, rather than have a single search box?",
+    description3: "What if we wanted users to search by individual fields, rather than have a single search box?",
     description4: "Click NEXT to add an 'advanced search' box",
     searchVisible: true,
     advancedSearchVisible: false,
@@ -142,16 +144,17 @@ var cardData = [
     logsVisible: false,
     autoCompleteOn: false,
     notificationsOn: false,
+    backOfSite: false,
     cta: {
-      url: "http://www.microsoft.com",
-      label: "Microsoft"
+      url: "https://github.com/ibm-cds-labs/simple-search-service",
+      label: "Simple Search Service"
     }
   },
 
   {
     title: "Step 4 - Advanced search",
     description1: "We now have some additional search boxes that allow searches to be directed to individual fields in the database (actor, director, year, genre).",
-    description2: "Try searching for films directed by 'Spielberg' or films made in 2005.",
+    description2: "Try searching for films starring 'Brad Pitt' or films made in 2005.",
     description3: "Wouldn't it be nice if the data in those fields 'auto-completed'?",
     description4: "Click NEXT to add 'auto-complete'",
     searchVisible: true,
@@ -160,9 +163,10 @@ var cardData = [
     logsVisible: false,
     autoCompleteOn: false,
     notificationsOn: false,
+    backOfSite: false,
     cta: {
-      url: "http://www.microsoft.com",
-      label: "Microsoft"
+      url: "https://github.com/ibm-cds-labs/simple-search-service",
+      label: "Simple Search Service"
     }
   },
 
@@ -170,53 +174,75 @@ var cardData = [
     title: "Step 5 - Autocomplete",
     description1: "Now, as you type in any of the search boxes, the website makes suggestions that complete the question. ",
     description2: "This featured is powered by a second microservice: the Simple Autocomplete Service, which uses an in-memory Redis database to turn lists of text into a fast auto-complete API.",
-    description3: "What if I wanted to allow customers to chat with a customer service employee from within the site?",
-    description4: "Click NEXT to add real-time notifications",
+    description3: "What if I wanted to alert customers in realtime that movie posters that they may be interested in are getting low on stock?",
+    description4: "Click NEXT to add realtime notifications",
     searchVisible: true,
     advancedSearchVisible: true,
     autoCompleteOn: true,
     notificationsOn: false,
     facetsVisible: true,
     logsVisible: false,
+    backOfSite: false,
     cta: {
-      url: "http://www.microsoft.com",
-      label: "Microsoft"
+      url: "https://github.com/ibm-cds-labs/simple-autocomplete-service",
+      label: "Simple Autocomplete Service"
     }
   },
 
   {
-    title: "Step 6 - Realtime data feeds",
-    description1: "With real-time notifications on, we can see data arriving in the web page as it changes: low stock notifications, out-of-stock warnings and real-time chat are just some of the use-cases.",
-    description2: "It's important to log everything - what searches a user is doing, the autocompletes, which posters they got more details on. All this data can be analysed to draw insights into your site so that it can be made more useful.",
-    description3: "Luckily we've being recording this data all along :)",
-    description4: "Click NEXT to view the logs",
+    title: "Step 6 - Realtime notifications",
+    description1: "With realtime notifications on, we can see data arriving in the web page as it changes: low stock notifications, out-of-stock warnings and real-time chat are just some of the use-cases.",
+    description2: "This feature is powered by another microservice: the Simple Notification Service. Here we are using RethinkDB to power the orchestration of realtime notifications to visitors of your site.",
+    description3: "These notifications can be tailored and targeted to each individual user, based on their previous behaviour on your site.",
+    description4: "Wouldn't it be nice if we could analyse this behaviour at a later date?",
     searchVisible: true,
     advancedSearchVisible: true,
     autoCompleteOn: true,
     notificationsOn: true,
     facetsVisible: true,
     logsVisible: false,
+    backOfSite: false,
     cta: {
-      url: "http://www.microsoft.com",
-      label: "Microsoft"
+      url: "https://github.com/ibm-cds-labs/simple-notification-service",
+      label: "Simple Notification Service"
     }
   },
 
   {
     title: "Step 7 - The logs",
-    description1: "We've flipped the site round to look at the data we've been recording since you arrived at the page. All of the searches, autocompletes and viewed poseters.",
-    description2: "All of this data is dispatched to the Simple Logging Service where it can be stored in a database for future analysis.",
-    description3: "Thanks for watching the demo - etc etc",
-    description4: "",
+    description1: "We've flipped the site round to look at the data we've been recording since you arrived at the page. All of the searches, autocompletes and viewed posters.",
+    description2: "It's important to log everything - what searches a user is doing, the autocompletes, which posters they got more details on. All this data can be analysed to draw insights into your site so that it can be made more useful.",
+    description3: "Luckily we've being recording this data all along :)",
+    description4: "All of this data is dispatched to the Simple Logging Service where it can be stored in a database for future analysis.",
     searchVisible: true,
     advancedSearchVisible: true,
     autoCompleteOn: true,
     notificationsOn: true,
     facetsVisible: true,
     logsVisible: true,
+    backOfSite: false,
     cta: {
-      url: "http://www.microsoft.com",
-      label: "Microsoft"
+      url: "https://github.com/ibm-cds-labs/simple-logging-service",
+      label: "Simple Logging Service"
+    }
+  },
+
+  {
+    title: "Step 8 - How does this work?",
+    description1: "This site is powered by a number of microservices, running in IBM Bluemix.",
+    description2: "All of these services are free and open-source so you can use them to enhance your existing websites or build something new.",
+    description3: "Each of these services exposes an API that can be used by other applications to solve a specific problem.",
+    description4: "Read more about the Simple Suite by clicking here.",
+    searchVisible: false,
+    advancedSearchVisible: false,
+    autoCompleteOn: false,
+    notificationsOn: false,
+    facetsVisible: false,
+    logsVisible: false,
+    backOfSite: true,
+    cta: {
+      url: "http://www.ibm.com",
+      label: "Simple Suite"
     }
   }
 
