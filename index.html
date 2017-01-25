@@ -34,7 +34,9 @@
 							<input type="text" name="year" v-model="year" id="year" placeholder="e.g. 2005" data-autocomplete>
 							<input type="text" name="genre" v-model="genre" id="genre" placeholder="e.g. Drama" data-autocomplete>
 							<input type="text" name="director" v-model="director" id="director" placeholder="e.g. Quentin Tarantino" data-autocomplete>
+							<br />
 							<button type="submit">Search</button>
+							<button type="button" v-on:click="formReset">Reset</button>
 						</form>
 					</div>
 
@@ -51,12 +53,12 @@
 	      <div id="facets" v-show="cards[currentCard].facetsVisible">
 	        
 	        <h4 v-show="facets.genre">Genre</h4>
-	      	<button v-on:click="setFacet('genre', genre)" v-for="count,genre in facets.genre" class="btn btn-info mr10" type="button">
+	      	<button v-on:click="setFacet('genre', genre)" v-for="count,genre in facets.genre" class="btn btn-info mr10 mt10" type="button">
 					  {{ genre }} <span class="badge">{{ count }}</span>
 					</button>
 
 	      	<h4 v-show="facets.year">Year</h4>
-	      	<button v-on:click="setFacet('year', year)" v-for="count,year in facets.year" class="btn btn-info mr10" type="button">
+	      	<button v-on:click="setFacet('year', year)" v-for="count,year in facets.year" class="btn btn-info mr10 mt10" type="button">
 					  {{ year }} <span class="badge">{{ count }}</span>
 					</button>
 
@@ -64,9 +66,13 @@
 
 				<div class="row">
 				
-					<div class="col-md-3" v-for="movie in movies">
+					<div class="col-md-3" v-show="movies.length" v-for="movie in movies">
 						<h3 class="text-nowrap">{{ movie.title }}</h3>
 						<img v-on:click="moreDetails(movie)" v-bind:src="movie.poster" class="poster img-responsive">
+					</div>
+
+					<div class="col-md-3" v-show="movies.length == 0">
+						<h1 class="text-nowrap">There are no results for your search</h3>
 					</div>
 
 				</div>
@@ -339,6 +345,16 @@
 		  		this.currentCard = 0;
 		  		this.realtimeMovies = [];
 		  		this.notificationData = null;
+
+		  	},
+
+		  	formReset: function() {
+
+		  		this.title = "";
+		  		this.cast = "";
+		  		this.year = "";
+		  		this.director = "";
+		  		this.genre = "";
 
 		  	}
 		  }

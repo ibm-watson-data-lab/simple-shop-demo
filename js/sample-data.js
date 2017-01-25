@@ -136,7 +136,7 @@ var cardData = [
     title: "Step 3 - Search results with facets",
     description1: "Facets are counts of repeating values in your data set. Search for 'Spielberg' and see the counts of posters by year and genre",
     description2: "The facets can also be used to allow users to filter the data set. Click on one of the facets to see the data set become more focussed.",
-    description3: "What if we wanted users to search by individual fields, rather than have a single search box?",
+    description3: "What if we wanted users to be able to search by individual fields, rather than have a single search box?",
     description4: "Click NEXT to add an 'advanced search' box",
     searchVisible: true,
     advancedSearchVisible: false,
@@ -210,8 +210,8 @@ var cardData = [
 
   {
     title: "Step 7 - The logs",
-    description1: "We've flipped the site round to look at the data we've been recording since you arrived at the page. All of the searches, autocompletes and viewed posters.",
-    description2: "It's important to log everything - what searches a user is doing, the autocompletes, which posters they got more details on. All this data can be analysed to draw insights into your site so that it can be made more useful.",
+    description1: "We've been recording your activity ever since you arrived at the page.",
+    description2: "It's important to log everything - what searches a user is doing, the autocompletes, which posters they asked for more details on. All this data can be analysed to draw insights into your site so that it can be made more useful.",
     description3: "Luckily we've being recording this data all along :)",
     description4: "All of this data is dispatched to the Simple Logging Service where it can be stored in a database for future analysis.",
     searchVisible: true,
