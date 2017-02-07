@@ -96,7 +96,7 @@ var cardData = [
 
   {
     title: "Step 1 - Simple Suite Demo",
-    description1: "Imagine you have an e-commerce website that sells movie posters. You want a web site that allows customers to find the posters they are looking for and have a great user experience. This demonstration will show you how easy it is to combine a number of microservices, running on the IBM Bluemix platoform, to power the functionality that your website needs.",
+    description1: "Imagine you have an e-commerce website that sells movie posters. You want a web site that allows customers to find the posters they are looking for and have a great user experience. This demonstration will show you how easy it is to combine a number of microservices, running on the IBM Bluemix platform, to power the functionality that your website needs.",
     description2: "Currently, our site has some featured posters from our inventory on the front page. Try clicking on poster image to reveal more detals.",
     description3: "Let's get started by adding a search bar to the top of the site - powered by the Simple Search Service, which turns your structured data into a search engine in a few easy steps.",
     description4: "Click NEXT to add a search facility to this site",
@@ -232,7 +232,7 @@ var cardData = [
     description1: "This site is powered by a number of microservices, running in IBM Bluemix.",
     description2: "All of these services are free and open-source so you can use them to enhance your existing websites or build something new.",
     description3: "Each of these services exposes an API that can be used by other applications to solve a specific problem.",
-    description4: "Read more about the Simple Suite by clicking here.",
+    description4: "Read more about the Simple Suite by clicking the link below.",
     searchVisible: false,
     advancedSearchVisible: false,
     autoCompleteOn: false,

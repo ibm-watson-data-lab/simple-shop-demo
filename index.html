@@ -1,137 +1,141 @@
 <html>
 	<head>
-		<title>Simple Shop</title>
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<link href="css/jquery-ui.min.css" rel="stylesheet">
 		<link href="css/shop.css" rel="stylesheet">
+		<link href="css/jquery-ui.min.css" rel="stylesheet">
+
 		<script src="https://unpkg.com/vue/dist/vue.js"></script>
 		<script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 		<script src="js/jquery-ui.min.js"></script>
 		<script src="https://simple-notification.mybluemix.net/sns-client.js"></script>
 		<script src="js/sample-data.js"></script>
+
+		<title>The Poster Shop | Simple Suite Service</title>
 	</head>
 	<body>
+		<header>
+			<div>
+				<h1><a href="#">the poster shop</a></h1>
+			</div>
+		</header>
 
-		<div id="shop" class="container-fluid">
-			
-			<div id="frontofsite" v-show="!cards[currentCard].backOfSite">
-				<header>
-					<h1>My Poster Shop</h1>
-					<hr>
-				</header>
-
-				<div class="row">
-				
-					<div class="col-md-6">
-						<form id="freetext" v-on:submit.prevent="search" v-show="cards[currentCard].searchVisible">
-							<input type="text" name="title" v-model="title" id="title" placeholder="e.g. Misery or Brad Pitt" data-autocomplete>
-							<button type="submit">Search</button>
-						</form>
-
-						<form id="advanced" v-on:submit.prevent="advancedSearch" v-show="cards[currentCard].advancedSearchVisible">
-							<input type="text" name="cast" v-model="cast" id="cast" placeholder="e.g. brad pitt" data-autocomplete>
-							<input type="text" name="year" v-model="year" id="year" placeholder="e.g. 2005" data-autocomplete>
-							<input type="text" name="genre" v-model="genre" id="genre" placeholder="e.g. Drama" data-autocomplete>
-							<input type="text" name="director" v-model="director" id="director" placeholder="e.g. Quentin Tarantino" data-autocomplete>
-							<br />
-							<button type="submit">Search</button>
-							<button type="button" v-on:click="formReset">Reset</button>
-						</form>
-					</div>
-
-					<div class="col-md-6">
-					<div class="alert alert-warning alert-dismissible" role="alert" v-show="notificationData">
-					  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					  <strong>Watch out!</strong> {{ notificationData }}
-					</div>
-					</div>
-
-				</div>
-						
-
-	      <div id="facets" v-show="cards[currentCard].facetsVisible">
-	        
-	        <h4 v-show="facets.genre">Genre</h4>
-	      	<button v-on:click="setFacet('genre', genre)" v-for="count,genre in facets.genre" class="btn btn-info mr10 mt10" type="button">
-					  {{ genre }} <span class="badge">{{ count }}</span>
-					</button>
-
-	      	<h4 v-show="facets.year">Year</h4>
-	      	<button v-on:click="setFacet('year', year)" v-for="count,year in facets.year" class="btn btn-info mr10 mt10" type="button">
-					  {{ year }} <span class="badge">{{ count }}</span>
-					</button>
-
-				</div>
-
-				<div class="row">
-				
-					<div class="col-md-3" v-show="movies.length" v-for="movie in movies">
-						<h3 class="text-nowrap">{{ movie.title }}</h3>
-						<img v-on:click="moreDetails(movie)" v-bind:src="movie.poster" class="poster img-responsive">
-					</div>
-
-					<div class="col-md-3" v-show="movies.length == 0">
-						<h1 class="text-nowrap">There are no results for your search</h3>
-					</div>
-
-				</div>
-
-				<pre v-show="cards[currentCard].logsVisible" v-for="log in logs">{{ JSON.stringify(log) }}</pre>
-
-				<div id="moreDetails" class="modal fade" tabindex="-1" role="dialog">
-				  <div class="modal-dialog" role="document">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				        <h4 class="modal-title">{{ popup.title || '' }} ({{ popup.year || '' }})</h4>
-				      </div>
-				      <div class="modal-body">
-				        <h4>&pound;{{ popup.price || 0 }}</h4>
-				        <p><b>Cast:</b> {{ popup.cast && popup.cast.join(", ") }}</p>
-				        <p><b>Director:</b> {{ popup.director || '' }}</p>
-				        <p>{{ popup.genre && popup.genre.join(" / ") }}</p>
-				        <img :src="popup.poster">
-				      </div>
-				    </div>
-				  </div>
-				</div>
-			
+		<div id="shop">
+			<div class="toast">
+				<strong>Watch out!</strong> {{ notificationData }}
 			</div>
 
-			<div id="backofsite" class="container-fluid" v-show="cards[currentCard].backOfSite">
+			<section class="col search-wrapper" v-show="cards[currentCard].searchVisible && !cards[currentCard].backOfSite">
+				<form class="search" v-on:submit.prevent="search">
+					<label>Search</label>
+					<input type="text" name="title" v-model="title" id="title" placeholder="e.g. Misery or Brad Pitt" data-autocomplete>
+					<button type="submit">Search</button>
+				</form>
+				<form class="search" v-on:submit.prevent="advancedSearch" v-show="cards[currentCard].advancedSearchVisible">
+					<label>Advanced Search</label>
+					<input type="text" name="cast" v-model="cast" id="cast" placeholder="e.g. Brad Pitt" data-autocomplete>
+					<input type="text" name="year" v-model="year" id="year" placeholder="e.g. 1995" data-autocomplete>
+					<input type="text" name="genre" v-model="genre" id="genre" placeholder="e.g. Thriller" data-autocomplete>
+					<input type="text" name="director" v-model="director" id="director" placeholder="e.g. Quentin Tarantino" data-autocomplete>
+					<button type="button" v-on:click="formReset">Reset</button>
+					<button type="submit">Search</button>
+				</form>
+				<ul class="facets" v-show="cards[currentCard].facetsVisible">
+					<li v-show="facets.genre">
+						<span>Genre</span>
+						<ul class="genre-list" style="display:none">
+							<li v-on:click="setFacet('genre', genre)" v-for="count,genre in facets.genre">
+								<span>{{ genre }}</span> <span class="badge">{{ count }}</span>
+							</li>
+						</ul>
+					</li>
+					<li v-show="facets.year">
+						<span>Year</span>
+						<ul class="genre-list" style="display:none">
+							<li v-on:click="setFacet('year', year)" v-for="count,year in facets.year">
+								<span>{{ year }}</span> <span class="badge">{{ count }}</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
 
-				<header>
+			<div class="shop-steps-wrapper">
+				<section class="col full-site-wrapper shop-wrapper" v-show="cards[currentCard].backOfSite">
 					<h1>How does this all work?</h1>
-					<hr>
-				</header>
+					<div>
+							<img src="img/schematic.png">
+					</div>
+				</section>
 
-				<div class="row">
-
-					<div class="col-md-12">
-						<img src="img/schematic.png">
+				<section class="col shop-wrapper" v-show="!cards[currentCard].backOfSite" v-bind:class="{ 'full-site-wrapper': !currentCard }">
+					<div v-show="movies.length > 0">
+						<h1>Welcome to the Poster Shop</h1>
+						<ul>
+							<li v-show="movies.length" v-for="movie in movies">
+								<h3 class="text-nowrap">{{ movie.title }}</h3>
+								<img v-on:click="showModal = true;popup = movie" v-bind:src="movie.poster" class="poster img-responsive">
+							</li>
+						</ul>
+						<modal v-bind:movieinfo="popup" v-if="showModal" @close="showModal = false"></modal>
 					</div>
 
-				</div>
+					<div v-show="movies.length == 0">
+						<h1 class="text-nowrap">There are no results for your search</h1>
+					</div>
+				</section>
 
+				<section class="col steps-wrapper" v-bind:class="{ 'no-search-steps-wrapper': !currentCard || cards[currentCard].backOfSite }">
+					<div class="step">
+						<h1>{{ cards[currentCard].title }}</h1>
+						<p>{{ cards[currentCard].description1 }}</p>
+						<p>{{ cards[currentCard].description2 }}</p>
+						<p>{{ cards[currentCard].description3 }}</p>
+						<h3>{{ cards[currentCard].description4 }}</h3>
+						<div class="button-group">
+							<button v-if="currentCard < (cards.length - 1)" class="btn" v-on:click="nextCard">Next</button>
+							<button v-if="currentCard == (cards.length - 1)" class="btn" v-on:click="reset">Restart The Demo</button>
+						</div>
+						<p v-show="cards[currentCard].cta.url"><a target="_blank" :href="cards[currentCard].cta.url">{{ cards[currentCard].cta.label}}</a></p>
+					</div>
+					<div class="log" v-show="cards[currentCard].logsVisible">
+						<h1>Logging</h1>
+						<span v-for="log in logs">{{ JSON.stringify(log) }}</span>
+					</div>
+				</section>
 			</div>
-
-			<footer class="footer">
-			  <div class="container">
-			  	
-			    <h1>{{ cards[currentCard].title }}</h1>
-			    <p>{{ cards[currentCard].description1 }}</p>
-		      <p>{{ cards[currentCard].description2 }}</p>
-		      <p>{{ cards[currentCard].description3 }}</p>
-		      <h3>{{ cards[currentCard].description4 }} <button v-if="currentCard < (cards.length - 1)" class="btn btn-info" v-on:click="nextCard">Next</button><button v-if="currentCard == (cards.length - 1)" class="btn btn-info" v-on:click="reset">Restart The Demo</button></h3>
-			    <p v-show="cards[currentCard].cta.url"><a target="_blank" :href="cards[currentCard].cta.url">{{ cards[currentCard].cta.label}}</a></p>
-			   
-			  </div>
-			</footer>
-
 		</div>
 
 	</body>
+
+<script type="text/x-template" id="modal-template">
+  <transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+
+          <div class="modal-header">
+            <slot name="header">
+              <h4>{{ movieinfo.title || '' }} ({{ movieinfo.year || '' }})</h4>
+            </slot>
+						<button class="modal-default-button" @click="$emit('close')">&times;</button>
+          </div>
+
+          <div class="modal-body">
+            <slot name="body">
+              <h4>&pound;{{ movieinfo.price || 0 }}</h4>
+							<p><b>Cast:</b> {{ movieinfo.cast && movieinfo.cast.join(", ") }}</p>
+							<p><b>Director:</b> {{ movieinfo.director || '' }}</p>
+							<p>{{ movieinfo.genre && movieinfo.genre.join(" / ") }}</p>
+							<div><img :src="movieinfo.poster"/></div>
+            </slot>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</script>
+
+
 	<script type="text/javascript">
 		
 		var sns = new SNSClient("shop", {
@@ -146,6 +150,11 @@
 		sns.on('notification', function() {
 			app.renderNotification()
 		});
+		
+		Vue.component('modal', {
+			template: '#modal-template',
+			props: ['movieinfo']
+		})
 
 		var app = new Vue({
 		  el: '#shop',
@@ -163,7 +172,8 @@
 		    cards: cardData,
 		    currentCard: 0,
 		    realtimeMovies: [],
-		    notificationData: null
+		    notificationData: null,
+				showModal: false
 		  },
 		  watch: {
 		  	currentCard: function(val, oldVal) {
@@ -221,6 +231,19 @@
 						})
 
 		  		}.bind(this))
+
+					$('ul.facets > li > span')
+						.hover(function() {
+							if (!$(this).hasClass('active')) {
+								$('ul.facets > li > span.active')
+									.removeClass('active')
+									.siblings('ul.genre-list')
+									.hide(500);
+								$(this)
+									.addClass('active')
+									.siblings('ul.genre-list').show(750);
+							}
+						});
 
 		  	}.bind(this))
 
@@ -296,11 +319,7 @@
 
 		  	moreDetails: function(movie) {
 		  		this.popup = movie;
-		  		$('#moreDetails').modal('show');
-		  		this.log({
-		  			action: "popup",
-		  			poster: movie.title
-		  		})
+					this.showModal = true;
 		  	},
 
 		  	nextCard: function() {
@@ -315,7 +334,6 @@
 		  	},
 
 		  	renderNotification: function(n) {
-
 		  		if (this.cards[this.currentCard].notificationsOn === false) return;
 
 		  		if (this.realtimeMovies.length == 0) return;
@@ -326,9 +344,13 @@
 		  		this.notificationData = movie.title + " is running low on stock";
 		  		this.log({ action: "notification", type: "low stock", movie: movie.title })
 
+					$('.toast').removeClass('fadeout')
+					$('.toast').addClass('fadein')
 		  		setTimeout(function() {
-		  			this.notificationData = null;
-		  		}.bind(this), 5000)
+						$('.toast').removeClass('fadein')
+						$('.toast').addClass('fadeout')
+		  		}.bind(this), 3500)
+
 
 		  	},
 
@@ -361,5 +383,4 @@
 		});
 
 	</script>
-	<script src="js/bootstrap.min.js"></script>
 </html>
