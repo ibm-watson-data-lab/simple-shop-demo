@@ -3,9 +3,9 @@
 		<link href="css/shop.css" rel="stylesheet">
 		<link href="css/jquery-ui.min.css" rel="stylesheet">
 
-		<script src="https://unpkg.com/vue/dist/vue.js"></script>
-		<script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="js/vue-resource.min.js"></script>
+		<script src="js/jquery.min.js"></script>
 		<script src="js/jquery-ui.min.js"></script>
 		<script src="https://simple-notification.mybluemix.net/sns-client.js"></script>
 		<script src="js/sample-data.js"></script>
@@ -73,7 +73,7 @@
 						<ul>
 							<li v-show="movies.length" v-for="movie in movies">
 								<h3 class="text-nowrap">{{ movie.title }}</h3>
-								<img v-on:click="showModal = true;popup = movie" v-bind:src="movie.poster" class="poster img-responsive">
+								<img v-on:click="moreDetails(movie)" v-bind:src="movie.poster" class="poster img-responsive">
 							</li>
 						</ul>
 						<modal v-bind:movieinfo="popup" v-if="showModal" @close="showModal = false"></modal>
@@ -320,6 +320,10 @@
 		  	moreDetails: function(movie) {
 		  		this.popup = movie;
 					this.showModal = true;
+					this.log({
+						action: "popup",
+						movie: movie.title
+					})
 		  	},
 
 		  	nextCard: function() {
